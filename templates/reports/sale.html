@@ -1,0 +1,48 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="#" class="btn btn-default" id="rptexpexcel" disabled><i class="fa fa-file-excel-o"></i> Excel</a>
+  <a href="#" class="btn btn-success" id="rptexppdf" disabled><i class="fa fa-file-pdf-o"></i> PDF</a>
+</div>
+<h3>Sale Monthly Report</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="search-box">
+    <form class="form-inline">
+      <table>
+        <tr>
+          <td>Branch :</td>
+          <td style="padding: 0 5px">
+            <select class="form-control" id="branch_id" name="branch_id">
+              <option value="">- All Branches -</option>
+              {% for b in branches %}
+              <option value="{{b.id}}">{{b.name}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td width="20px"></td>
+          <td>Month :</td>
+          <td style="padding: 0 5px">
+            <input type="text" class="form-control" id="month" name="month" style="width:80px">
+          </td>
+          <td width="20px"></td>
+          <td>Year :</td>
+          <td style="padding: 0 5px">
+            <input type="text" class="form-control" id="year" name="year" style="width:80px">
+          </td>
+          <td width="20px"></td>
+          <td>
+            <a href="#" class="btn btn-default" id="rptpreview">View Report</a>
+            <a href="#" class="btn btn-default" id="rptclear">Clear</a>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <iframe id="ifrm"></iframe>
+</div>
+<script type="text/javascript" src="/static/app/reports/sale.js"></script>
+{% endblock %}

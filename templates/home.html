@@ -1,0 +1,15 @@
+{% extends "master/base.html" %}
+
+{% block content %}
+<ul class="panel-icon">
+  <li><a href="/pos"><p class="icon"><i class="fa fa-credit-card fa-2x"></i></p><p class="text">Point of Sale</p></a></li>
+  <li><a href="/menus"><p class="icon"><i class="fa fa-building fa-2x"></i></p><p class="text">Menu Pad</p></a></li>
+  <li><a href="/admin/orders">{% if bill_count %}<p class="balloon">{{bill_count}}</p>{% endif %}<p class="icon"><i class="fa fa-shopping-cart fa-2x"></i></p><p class="text">Orders</p></a></li>
+  <li><a href="/admin/branch"><p class="icon"><i class="fa fa-sitemap fa-2x"></i></p><p class="text">Branch</p></a></li>
+  <li><a href="/admin/product"><p class="icon"><i class="fa fa-inbox fa-2x"></i></p><p class="text">Products</p></a></li>
+  <li><a href="/admin/customer"><p class="icon"><i class="fa fa-users fa-2x"></i></p><p class="text">Customers</p></a></li>
+  <li><a href="#"><p class="icon"><i class="fa fa-cog fa-2x"></i></p><p class="text">Settings</p></a></li>
+  <li><a href="/report/dashboard"><p class="icon"><i class="fa fa-bar-chart-o fa-2x"></i></p><p class="text">Reports</p></a></li>
+  <li><a href="#"><p class="icon"><i class="fa fa-refresh fa-2x"></i></p><p class="text">Updates</p></a></li>
+</ul>
+{% endblock %}

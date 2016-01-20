@@ -1,0 +1,49 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="/admin/category/form" class="btn btn-success"><i class="fa fa-plus"></i> New Category</a>
+</div>
+<h3>Categories</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="search-box">
+    <form class="form-inline">
+      <select class="form-control" id="is_active">
+        <option value="">All</option>
+        <option value="Y" selected>Active</option>
+        <option value="N">Inactive</option>
+      </select>
+      <input type="text" class="form-control" id="search" placeholder="Enter a search term">
+      <button type="submit" class="btn btn-default" ng-click="search()"><i class="fa fa-search"></i> Search</button>
+      <a href="#" class="btn btn-default" ng-click="reset()">Reset</a>
+    </form>
+  </div>
+  <table class="table table-hover" id="list-table">
+    <thead>
+      <tr>
+        <th width="30%" sorted="name">Name</th>
+        <th width="52%" sorted="description">Description</th>
+        <th width="18%"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in categories">
+        <td>@{p.name}</td>
+        <td>@{p.description}</td>
+        <td align="right">
+          <a href="#" class="btn btn-default" ng-click="view(p.id)" ng-hide="p.is_active=='N'"><i class="fa fa-edit"></i></a>
+          <a href="#" class="btn btn-default" ng-click="remove(p.id)"><i class="fa fa-trash-o"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div paginate="results" class="pull-right"></div>
+  <span>Displaying @{pageCount} of @{total} entries</span>
+</div>
+<script type="text/javascript" src="/static/app/pagination.js"></script>
+<script type="text/javascript" src="/static/app/sorted.js"></script>
+<script type="text/javascript" src="/static/app/category/index.js"></script>
+{% endblock %}

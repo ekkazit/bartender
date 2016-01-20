@@ -1,0 +1,299 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}PosPax - Starter Template{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendor/font-awesome/css/font-awesome.min.css">
+  <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/angular/angular.min.js"></script>
+  <style type="text/css">
+    h1,h2,h3,h4,h5,ul,li,hr,p,form {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    body {
+    }
+
+    #bill-table tbody tr td {
+      border: none;
+      border-bottom: 1px solid #e7e7e7;
+      vertical-align: middle;
+    }
+
+    #bill-table .btn-circle {
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+    }
+
+    .bill-detail {
+      padding: 0 !important;
+      border-bottom: none !important;
+      background-color: #eee;
+    }
+
+    .bill-box-inner {
+      padding: 20px;
+      border-bottom: 1px solid #e7e7e7;
+    }
+
+    .popover{
+      max-width: 100%;
+    }
+
+    .numpad {
+      box-shadow: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      max-width: 120px;
+      text-align: center;
+    }
+
+    #pop-title tr td {
+      border: none !important;
+    }
+
+    #pop-title .input-group  {
+      max-width: 140px;
+    }
+
+    #pop-title .input-group .form-control {
+      text-align: center;
+    }
+
+    #pop-content tr td {
+      width: 25%;
+      padding: 5px;
+      border: none !important;
+    }
+
+    #pop-content tr td .btn {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 18px;
+    }
+
+    .btn-return {
+      font-size: 14px !important;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .hilight {}
+
+    .accordion-toggle.collapsed .fa-angle-up {
+      display: none;
+    }
+
+    .accordion-toggle .fa-angle-up {
+      display: inline-block;
+    }
+
+    .accordion-toggle.collapsed  .fa-angle-down {
+      display: inline-block;
+    }
+
+    .accordion-toggle  .fa-angle-down {
+      display: none;
+    }
+  </style>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+  <div class="navbar navbar-default navbar-static-top"></div>
+  <div class="container">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+      <table class="table" id="bill-table">
+        <thead>
+          <tr>
+            <th><i class="fa fa-shopping-cart"></i> 4</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th style="text-align: right">Total</th>
+            <th width="10px"></th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr ng-repeat-start="p in items">
+            <td><a href="#" data-toggle="collapse" data-target="#@{'demo' + p.id}" class="btn btn-default btn-circle accordion-toggle collapsed"><i class="fa fa-angle-up"></i><i class="fa fa-angle-down"></i></a></td>
+            <td><strong>@{p.product}</strong></td>
+            <td><input type="text" class="form-control numpad" ng-model="p.price" readonly></td>
+            <td><input type="text" class="form-control numpad" ng-model="p.qty" readonly></td>
+            <td align="right">@{p.total|number:2}</td>
+            <td align="right"><a href="#"><i class="fa fa-trash-o fa-2x"></i></a></td>
+          </tr>
+          <tr ng-repeat-end>
+            <td colspan="10" class="bill-detail">
+              <div id="@{'demo' + p.id}" class="accordian-body collapse">
+                <div class="bill-box-inner">
+                  This is a book1
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="pop-title" style="display:none">
+    <table width="270px" id="pop-title">
+      <tr>
+        <td><strong>Quantity</strong></td>
+        <td align="right">
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="npDecrement()"><i class="fa fa-minus"></i></button>
+            </span>
+            <input type="text" class="form-control" value="1" id="np-qty" onclick="npUnlock()">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="npIncrement()"><i class="fa fa-plus"></i></button>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="pop-content" style="display:none">
+    <table width="270px" id="pop-content">
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('1')">1</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('2')">2</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('3')">3</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npDel()">del</a></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('4')">4</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('5')">5</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('6')">6</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npPlusMinus()">+/-</a></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('7')">7</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('8')">8</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('9')">9</a></td>
+        <td rowspan="2"><a href="#" class="btn btn-default btn-return" onclick="npReturn()">Return</a></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('0')">0</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('00')">00</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('.')">.</a></td>
+      </tr>
+    </table>
+  </div>
+
+  <script type="text/javascript" src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    var _instance = null;
+
+    function npDecrement() {
+      var qty = parseInt($('#np-qty').val()||0, 10);
+      qty -= 1;
+      $('#np-qty').val(qty);
+    }
+
+    function npIncrement() {
+      var qty = parseInt($('#np-qty').val()||0, 10);
+      qty += 1;
+      $('#np-qty').val(qty);
+    }
+
+    function npReturn() {
+      if(_instance == null)
+        return;
+      var preval = $('#np-qty').val();
+      var qty = parseFloat((preval=='.' ? preval.replace('.', '') : preval)||0, 10);
+      $(_instance).val(qty);
+      $(_instance).popover('destroy');
+      _instance = null;
+    }
+
+    function npDel() {
+      var qty = $('#np-qty').val()||'';
+      if(qty != '') {
+        $('#np-qty').val(qty.substring(0, qty.length-1));
+      }
+    }
+
+    function npNumber(val) {
+      if($('#np-qty').hasClass('hilight')) {
+        $('#np-qty').val('');
+        $('#np-qty').removeClass('hilight');
+      }
+
+      var qty = $('#np-qty').val()||'';
+      if(val == '.' && qty.indexOf('.') != -1) { val = ''; }
+      $('#np-qty').val(qty + val);
+    }
+
+    function npPlusMinus() {
+      var qty = $('#np-qty').val()||'';
+      if(qty) {
+        if(qty[0] == '-') {
+          $('#np-qty').val(qty.replace('-', ''));
+        } else {
+          $('#np-qty').val('-' + qty);
+        }
+      }
+    }
+
+    function npUnlock() {
+      if($('#np-qty').hasClass('hilight')) {
+        $('#np-qty').removeClass('hilight');
+      }
+    }
+
+    $(function() {
+      $('.numpad').on('click', function() {
+        $(this).popover({
+          placement: 'bottom',
+          html:'true',
+          title: $('.pop-title').html(),
+          content: $('.pop-content').html(),
+        });
+        $(this).popover('show');
+
+
+
+        $('#np-qty').val(parseInt($(this).val()||'0', 10));
+        $('#np-qty').select();
+        $('#np-qty').addClass('hilight');
+
+        _instance = $(this);
+      });
+    });
+
+    $('html').on('click', function (e) {
+      $('.numpad').each(function () {
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 &&
+          $('.popover').has(e.target).length === 0) {
+          $(this).popover('destroy');
+        }
+      });
+    });
+
+    var app = angular.module('app', []);
+
+    app.config(function($interpolateProvider, $compileProvider) {
+      $compileProvider.debugInfoEnabled(false);
+      $interpolateProvider.startSymbol('@{').endSymbol('}');
+    });
+
+    app.controller('ctrl', function($scope, $http) {
+      $scope.items = [
+        { id:1, qty: 1, product: 'Caramel Macchiato', price: 120.00, total: 120.00},
+        { id:2, qty: 1, product: 'Espresso Hot', price: 80.00, total: 80.00},
+        { id:3, qty: 2, product: 'Banana Splited', price: 100.00, total: 200.00},
+        { id:4, qty: 4, product: 'Mocha Iced', price: 40.00, total: 160.00},
+      ];
+    });
+  </script>
+</body>
+</html>

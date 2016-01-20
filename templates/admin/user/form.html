@@ -1,0 +1,121 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="#" class="btn btn-default" ng-click="view('{{id}}')">Cancel</a>
+  <a href="#" class="btn btn-success" ng-click="submit()"><i class="fa fa-save"></i> Save Change</a>
+</div>
+<h3>{% if id %}Edit User <span class="text">"@{ ::user.firstname}"</span>{% else %}New User{% endif %}</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-9">
+    <form id="forms" class="form-wrapper" enctype="multipart/form-data" action="/api/user/save" method="post" data-parsley-validate>
+      <input type="hidden" id="id" name="id" value="{{ id }}">
+      <input type="hidden" id="img" name="img">
+      <input type="hidden" id="img_path" name="img_path">
+      <input type="hidden" id="no" name="no" ng-model="user.no">
+      <table id="form-table">
+        <tr>
+          <td>
+            <label for="code">Code</label>
+          </td>
+          <td>
+            <input type="text" class="form-control form-code" id="code" name="code"
+              ng-model="user.code" readonly>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="firstname">First Name</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="firstname" name="firstname" ng-model="user.firstname" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="lastname">Last Name</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="lastname" name="lastname" ng-model="user.lastname">
+          </td>
+        </tr>
+        <tr>
+          <td><label for="gender">Gender</label></td>
+          <td>
+            <div class="radio-box">
+              <input type="radio" id="na" name="gender" value="" checked><label for="na">N/A</label>
+              <input type="radio" id="male" name="gender" value="M"><label for="male">Male</label>
+              <input type="radio" id="female" name="gender" value="F"><label for="female">Female</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="email">Email</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="email" name="email" ng-model="user.email" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="phone">Phone</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="phone" name="phone" ng-model="user.phone">
+            <p class="small">For example: (662) 147-8951</p>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="role_id">Role</label></td>
+          <td>
+            <select class="form-control" id="role_id" name="role_id" ng-model="role" ng-options="s.name for s in roles track by s.id">
+              <option value="">- Please Select -</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="username">Username</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="username" name="username" ng-model="user.username" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="password">Password</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="password" class="form-control" id="password" name="password" ng-model="user.password" required>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div class="form-link">
+      <a href="/admin/user">Back to users</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <form id="uploadform" enctype="multipart/form-data" action="/api/fileupload/save" method="post">
+      <div class="img-holder">
+        <div id="no-pic" class="no-file" style="display:none">No Photo</div>
+        <img id="pic">
+        <div class="line">
+          <a href="#" id="addimg" class="btn btn-default pull-right">Add Image</a>
+          <a href="#" id="removeimg">Remove</a>
+        </div>
+        <input type="file" id="file" name="file" style="display:none">
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="/static/app/user/form.js"></script>
+{% endblock %}

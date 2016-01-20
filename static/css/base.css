@@ -1,0 +1,90 @@
+h1,h2,h3,h4,h5,ul,li,hr,p,form {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body {
+  font-family: 'proxima-nova', sans-serif;
+}
+
+/**/
+.container {
+  padding: 0 20px;
+}
+
+/**/
+.navbar {
+  margin: 0;
+}
+
+.navbar-nav .active {
+  font-weight: bold;
+}
+
+.navbar-right {
+  margin-left: 20px;
+}
+
+/**/
+.navbar-icon {
+  float: left;
+}
+
+.navbar-icon .fa {
+  line-height: 30px;
+  padding: 10px 20px;
+}
+
+/**/
+.navbar-brand {
+  margin: 0 5px;
+}
+
+/**/
+.navbar-fixed-bottom {
+  background-color: #fff;
+}
+
+.navbar-fixed-bottom .navbar-text {
+  padding: 0 20px;
+}
+
+/**/
+.panel-icon {
+  width: 550px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.panel-icon li {
+  float: left;
+  width: 25%;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.panel-icon .icon {
+  border: 1px solid #ddd;
+  padding: 25px 20px;
+  border-radius: 7px;
+  background-color: #fff;
+}
+
+.panel-icon .text {
+  padding: 5px 0;
+}
+
+.panel-icon .balloon {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  padding: 5px;
+  border-radius: 50%;
+  color: #fff;
+  background-color: #d9534f;
+}

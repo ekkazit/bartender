@@ -1,0 +1,24 @@
+{% extends "master/login.html" %}
+
+{% block content %}
+<div class="login-form">
+  <h4>Welcome Back!</h4>
+  <form id="form" method="post" onsubmit="return false">
+    <input type="text" class="form-control input-lg" placeholder="Email">
+    <input type="password" class="form-control input-lg" placeholder="Password">
+    <button type="submit" class="btn btn-success btn-lg">Login</button>
+  </form>
+  <div class="login-alt">or login using <a href="#">Facebook</a></div>
+</div>
+<div class="login-bottom">
+  <div class="pull-right">No account. Please <a href="/signup">Sign up</a></div>
+  <a href="#">Forgot password ?</a>
+</div>
+<script type="text/javascript">
+  $(function() {
+    $('#form').on('submit', function() {
+      window.location.href = '/home';
+    });
+  });
+</script>
+{% endblock %}

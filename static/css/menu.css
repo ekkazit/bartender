@@ -1,0 +1,101 @@
+h1,h2,h3,h4,h5,ul,li,hr,p,form {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body {
+  font-family: 'proxima-nova', sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 1170px;
+}
+
+/**/
+.navbar {
+}
+
+.navbar-default {
+  margin-bottom: 10px;
+}
+
+/**/
+.navbar-inverse {
+  border: none;
+}
+
+.navbar-fixed-bottom .navbar-inner {
+  padding: 0;
+}
+
+.navbar-fixed-bottom .nav {
+  margin: 0;
+  display: table;
+  width: 100%;
+}
+
+.navbar-fixed-bottom .nav li {
+  display: table-cell;
+  float: none;
+}
+
+.navbar-fixed-bottom .nav li a {
+  font-weight: bold;
+  text-align: center;
+}
+
+/**/
+.product {
+  margin: 0 5px;
+}
+
+.product li {
+  float: left;
+  width: 25%;
+  min-width: 250px;
+  padding: 12px 15px;
+}
+
+.product .item {
+  position: relative;
+}
+
+.product .item img {
+  width: 100%;
+}
+
+.product .item .price {
+  float: right;
+  position: absolute;
+  right: -15px;
+  bottom: -10px;
+  background-color: #ccc;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  padding: 10px 5px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 300;
+}
+
+.product .item .balloon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 2px 5px;
+  color: #fff;
+  background-color: #FF2020;
+  font-size: 12px;
+}
+
+.product .item .text {
+  float: left;
+  padding: 10px 0;
+}
+
+.product li a{
+  text-decoration: none;
+}

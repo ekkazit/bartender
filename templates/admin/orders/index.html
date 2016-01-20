@@ -1,0 +1,110 @@
+{% extends "master/admin.html" %}
+
+{% block script %}
+<link rel="stylesheet" type="text/css" href="/static/vendor/datepicker/css/bootstrap-datepicker3.min.css">
+<link rel="stylesheet" type="text/css" href="/static/vendor/select2/select2.min.css">
+<script type="text/javascript" src="/static/vendor/datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/static/vendor/datepicker/locales/bootstrap-datepicker.th.min.js"></script>
+<script type="text/javascript" src="/static/vendor/select2/select2.min.js"></script>
+{% endblock %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="/admin/orders/form" class="btn btn-success"><i class="fa fa-plus"></i> New Orders</a>
+</div>
+<h3>Orders</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="search-box">
+    <form class="form-inline" onsubmit="return false">
+      <table id="search-table">
+        <tr>
+          <td>
+            <p class="caption">Order No#</p>
+            <input type="text" class="form-control" placeholder="Order Number" id="search">
+          </td>
+          <td>
+            <p class="caption">Order Date</p>
+            <div class="input-group date">
+              <input type="text" class="form-control" placeholder="From Date" id="from_date">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+              </span>
+            </div>
+            <div class="input-group date">
+              <input type="text" class="form-control" placeholder="To Date" id="to_date">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+              </span>
+            </div>
+          </td>
+          <td>
+            <p class="caption">Status</p>
+            <select class="form-control" id="status">
+              <option value="">All</option>
+              {% for s in status %}
+              <option value="{{s.id}}">{{s.name|capitalize}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td valign="bottom" align="right">
+            <button type="submit" class="btn btn-default" ng-click="search()"><i class="fa fa-search"></i> Search</button>
+            <a href="#" class="btn btn-default" ng-click="reset()">Reset</a>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <table class="table table-hover" id="list-table">
+    <thead>
+      <tr>
+        <th width="10%" sorted="bill_no">No#</th>
+        <th width="9%" sorted="bill_date">Date</th>
+        <th width="8%" sorted="status_id">Status</th>
+        <th width="14%">Customer</th>
+        <th width="9%">Table</th>
+        <th width="6%" sorted="total_qty">Qty</th>
+        <th width="10%" sorted="total_price">Sub-Total</th>
+        <th width="5%" sorted="total_tax">Tax</th>
+        <th width="10%" sorted="total_discount">Discount</th>
+        <th width="10%" sorted="total_amount">Amount</th>
+        <th width="9%"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in bills" ng-class="{highlight:p.status.name=='new'}">
+        <td><a href="#" ng-click="view(p.id)">@{p.bill_no}</a></td>
+        <td>@{p.bill_date|date:'dd/MM/yyyy'}</td>
+        <td>@{p.status.name|capitalize}</td>
+        <td>@{p.customer.firstname} @{p.customer.lastname}</td>
+        <td>@{p.tables.name}</td>
+        <td>@{p.total_qty}</td>
+        <td>@{p.total_price|number:2}</td>
+        <td>@{p.total_tax|number:2}</td>
+        <td>@{p.total_discount|number:2}</td>
+        <td>@{p.total_amount|number:2}</td>
+        <td align="right">
+          <a href="#" class="btn btn-default" ng-click="view(p.id)" ng-hide="p.is_active=='N'"><i class="fa fa-edit"></i></a>
+          <a href="#" class="btn btn-default" ng-click="remove(p.id)"><i class="fa fa-trash-o"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div paginate="results" class="pull-right"></div>
+  <span>Displaying @{pageCount} of @{total} entries</span>
+</div>
+<script type="text/javascript">
+  $(function() {
+    $('.input-group.date').datepicker({
+      format: "dd/mm/yyyy",
+      todayBtn: "linked",
+      clearBtn: true
+    });
+  });
+</script>
+<script type="text/javascript" src="/static/app/pagination.js"></script>
+<script type="text/javascript" src="/static/app/sorted.js"></script>
+<script type="text/javascript" src="/static/app/orders/index.js"></script>
+{% endblock %}

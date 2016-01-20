@@ -1,0 +1,95 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="#" class="btn btn-default" ng-click="view('{{id}}')">Cancel</a>
+  <a href="#" class="btn btn-success" ng-click="submit()"><i class="fa fa-save"></i> Save Change</a>
+</div>
+<h3>{% if id %}Edit Customer <span class="text">"@{ ::customer.firstname}"</span>{% else %}New Customer{% endif %}</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-9">
+    <form id="forms" class="form-wrapper" enctype="multipart/form-data" action="/api/customer/save" method="post" data-parsley-validate>
+      <input type="hidden" id="id" name="id" value="{{ id }}">
+      <input type="hidden" id="img" name="img">
+      <input type="hidden" id="img_path" name="img_path">
+      <input type="hidden" id="no" name="no" ng-model="customer.no">
+      <table id="form-table">
+        <tr>
+          <td>
+            <label for="code">Code</label>
+          </td>
+          <td>
+            <input type="text" class="form-control form-code" id="code" name="code"
+              ng-model="customer.code" readonly>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="firstname">First Name</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="firstname" name="firstname" ng-model="customer.firstname" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="lastname">Last Name</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="lastname" name="lastname" ng-model="customer.lastname">
+          </td>
+        </tr>
+        <tr>
+          <td><label for="gender">Gender</label></td>
+          <td>
+            <div class="radio-box">
+              <input type="radio" id="na" name="gender" value="" checked><label for="na">N/A</label>
+              <input type="radio" id="male" name="gender" value="M"><label for="male">Male</label>
+              <input type="radio" id="female" name="gender" value="F"><label for="female">Female</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="email">Email</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="email" name="email" ng-model="customer.email" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="phone">Phone</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="phone" name="phone" ng-model="customer.phone">
+            <p class="small">For example: (662) 147-8951</p>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div class="form-link">
+      <a href="/admin/customer">Back to customers</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <form id="uploadform" enctype="multipart/form-data" action="/api/fileupload/save" method="post">
+      <div class="img-holder">
+        <div id="no-pic" class="no-file" style="display:none">No Photo</div>
+        <img id="pic">
+        <div class="line">
+          <a href="#" id="addimg" class="btn btn-default pull-right">Add Image</a>
+          <a href="#" id="removeimg">Remove</a>
+        </div>
+        <input type="file" id="file" name="file" style="display:none">
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="/static/app/customer/form.js"></script>
+{% endblock %}

@@ -1,0 +1,210 @@
+<div class="modal fade" id="checkout-modal" tabindex="-1" role="dialog" aria-labelledby="checkoutLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-text">
+          <h3>Checkout</h3>
+          <span>Total : <strong>$@{sum.total_amount|number:2}</strong> THB</span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="cashHead">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#cash" aria-expanded="true"
+                  aria-controls="cash">Cash</a>
+              </h4>
+            </div>
+            <div id="cash" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="cashHead">
+              <div class="panel-body">
+                <table id="checkout-table">
+                  <tr>
+                    <td>Receive</td>
+                    <td><input type="text" class="form-control input-lg" ng-model="checkout.total_charge"></td>
+                    <td>THB</td>
+                  </tr>
+                  <tr>
+                    <td>Charge</td>
+                    <td><input type="text" class="form-control input-lg" ng-model="checkout.total_return" readonly></td>
+                    <td>THB</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="creditHead">
+              <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#credit"
+                  aria-expanded="false" aria-controls="collapseTwo">Credit</a>
+              </h4>
+            </div>
+            <div id="credit" class="panel-collapse collapse" role="tabpanel" aria-labelledby="creditHead">
+              <div class="panel-body">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="pull-left" data-dismiss="modal">back to current sale</a>
+        <button type="button" class="btn btn-primary" ng-click="checkoutBill()"
+          ng-disabled="checkout.total_charge < checkout.total_amount || checkout.total_charge==0">Proceed</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="receipt-modal" tabindex="-1" role="dialog" aria-labelledby="receiptLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-text">
+          <h3>Receipt</h3>
+          <span>Sale No: @{bill.bill_no}</span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <ul class="receipt-icon">
+          <li><a href="#" class="btn btn-default btn-lg" ng-disabled="!bill.cust_id"
+            ng-click="emailBill()"><i class="fa fa-envelope fa-2x"></i><br>Email</a></li>
+          <li><a href="#" class="btn btn-primary btn-lg"
+            ng-click="printBill()"><i class="fa fa-print fa-2x"></i><br>Print</a></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="pull-right" data-dismiss="modal" ng-click="completeNoReceipt()">Complete</a>
+        <a href="#" class="pull-left" data-dismiss="modal" ng-click="backToCheckoutBill()">back to checkout</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="email-modal" tabindex="-1" role="dialog" aria-labelledby="emailLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="customer-profile">
+          <img src="/static/img/person.png">
+          <p class="caption">@{customer.firstname} @{customer.lastname}</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="email-form">
+          <p class="caption">Customer Email :</p>
+          <input type="text" class="form-control input-lg" ng-model="customer.email">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="pull-left" data-dismiss="modal" ng-click="backToReceiptBill()">back to receipt</a>
+        <button type="button" class="btn btn-primary" ng-click="completeBill()" id="btnSendMail">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="complete-modal" tabindex="-1" role="dialog" aria-labelledby="completeLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-text">
+          <h3>Sale Completed</h3>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="complete-form">
+          <p class="caption">Click OK to create new sale</p>
+          <button type="button" class="btn btn-primary" data-dismiss="modal"
+            ng-click="closeCompleteBill()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="customer-modal" tabindex="-1" role="dialog" aria-labelledby="customerLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="header-text">
+          <h4>New Customer</h4>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table class="form-modal">
+          <tr>
+            <td>Name <span class="required">*</span></td>
+            <td><input type="text" class="form-control" placeholder="First Name" ng-model="cust.firstname"/></td>
+            <td></td>
+            <td><input type="text" class="form-control" placeholder="Last Name" ng-model="cust.lastname"/></td>
+          </tr>
+          <tr>
+            <td>Email <span class="required">*</span></td>
+            <td colspan="5"><input type="text" class="form-control" placeholder="Email" ng-model="cust.email"/></td>
+          </tr>
+          <tr>
+            <td>Phone</td>
+            <td colspan="5"><input type="text" class="form-control" placeholder="Phone" ng-model="cust.phone"/></td>
+          </tr>
+          <tr>
+            <td>Gender</td>
+            <td colspan="3">
+              <input type="radio" id="na" name="gender" ng-model="cust.gender" value="" ng-checked="true"/>
+              <label for="na">N/A</label>
+              <input type="radio" id="male" name="gender" ng-model="cust.gender" value="M"/>
+              <label for="male">Male</label>
+              <input type="radio" id="female" name="gender" ng-model="cust.gender" value="F"/>
+              <label for="female">Female</label>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <a href="#" data-dismiss="modal" class="btn-link">Close</a>
+        <button type="button" class="btn btn-primary" ng-click="saveCustomer()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="holdbill-modal" tabindex="-1" role="dialog" aria-labelledby="billLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="header-text">
+          <h4>Open Saved Sale</h4>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Sale No.</th>
+              <th>Amount</th>
+              <th>No. Items</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="h in holdBills">
+            <td>@{h.bill_date|date:'HH:mm a'}</td>
+            <td><a href="#">@{h.bill_no}</a></td>
+            <td>@{h.total_amount|number:2}</td>
+            <td>@{h.bill_items.length}</td>
+            <td align="right">
+              <a href="#" class="btn btn-danger" ng-click="deleteBill(h.id)"><i class="fa fa-trash-o"></i></a>
+              <a href="#" class="btn btn-primary" ng-click="openBill(h.id)"><i class="fa fa-folder-open"></i> Open</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bartender - Order Menu</title>
+  <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/font.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/menu.css">
+  <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="/static/vendor/masonry/masonry.min.js"></script>
+</head>
+<body>
+  <div class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="#" class="navbar-brand">Bartender</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="#" id="orders">Order <span class="badge">3</span></a></li>
+          <li><a href="#"><i class="fa fa-table"></i> Table 10</a></li>
+          <li><a href="#"><img src="/static/img/thai.png"></a></li>
+          <li><a href="#"><i class="fa fa-times"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <ul class="product">
+        <li><a href="#"><div class="item"><img src="/static/img/01.jpg"><div class="balloon">Recommend</div><div class="text">Pork Steak</div><div class="price">80.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/02.jpg"><div class="balloon">Best Sellers</div><div class="text">T-Bone Steak</div><div class="price">80.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/03.jpg"><div class="balloon">Best Sellers</div><div class="text">Spicy Steak</div><div class="price">60.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/04.jpg"><div class="text">Teriyaki Steak</div><div class="price">100.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/05.jpg"><div class="text">Ham Steak</div><div class="price">100.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/06.jpg"><div class="text">Pork Shop Steak</div><div class="price">120.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/07.jpg"><div class="text">Pork Rubber Steak</div><div class="price">60.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/08.jpg"><div class="text">Sourcesage Steak</div><div class="price">60.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/09.jpg"><div class="text">Pork Spicy Steak</div><div class="price">80.-</div></div></a></li>
+        <li><a href="#"><div class="item"><img src="/static/img/10.jpg"><div class="text">Pork Grill Steak</div><div class="price">100.-</div></div></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+      <div class="collapse navbar-collapse">
+        <div class="row">
+          <ul class="nav navbar-nav">
+            <li><a href="#">All Categories</a></li>
+            <li><a href="#">Steak</a></li>
+            <li><a href="#">Coffee</a></li>
+            <li><a href="#">Drinks</a></li>
+            <li><a href="#">Dessert</a></li>
+            <li><a href="#">Icecream</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    $(window).load(function(){
+      $('.product').masonry({ itemSelector: 'li' });
+    });
+    $(function () {
+    });
+  </script>
+</body>
+</html>

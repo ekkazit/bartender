@@ -1,0 +1,271 @@
+{% extends "master/admin.html" %}
+
+{% block script %}
+<link rel="stylesheet" type="text/css" href="/static/vendor/datepicker/css/bootstrap-datepicker3.min.css">
+<link rel="stylesheet" type="text/css" href="/static/vendor/select2/select2.min.css">
+<script type="text/javascript" src="/static/vendor/datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/static/vendor/datepicker/locales/bootstrap-datepicker.th.min.js"></script>
+<script type="text/javascript" src="/static/vendor/select2/select2.min.js"></script>
+{% endblock %}
+
+{% block head %}
+<div class="pull-right">
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default" id="payslip"><i class="fa fa-file-text-o"></i></button>
+    <button type="button" class="btn btn-default" id="saleorder"><i class="fa fa-print"></i></button>
+    <button type="button" class="btn btn-default" ng-click="prevId()"><i class="fa fa-chevron-left"></i></button>
+    <button type="button" class="btn btn-default" ng-click="nextId()"><i class="fa fa-chevron-right"></i></button>
+  </div>
+  <a href="#" class="btn btn-default" ng-click="view('{{id}}')">Cancel</a>
+  <a href="#" class="btn btn-success" ng-click="submit()"><i class="fa fa-save"></i> Save Change</a>
+</div>
+<h3>{% if id %}Edit Orders <span class="text">"@{bill.bill_no}"</span>{% else %}New Orders{% endif %}</h3>
+{% endblock %}
+
+{% block content %}
+{% include "admin/orders/partial/modals.html" %}
+<div class="container">
+<form id="forms" enctype="multipart/form-data" action="/api/bill/formsave" method="post" data-parsley-validate>
+  <input type="hidden" id="site_id" value="{{site_id}}">
+  <input type="hidden" id="id" name="id" value="{{id}}">
+  <input type="hidden" id="no" name="no">
+  <input type="hidden" id="cust_id" name="cust_id">
+  <input type="hidden" id="table_id" name="table_id">
+  <input type="hidden" id="user_id" name="user_id">
+  <input type="hidden" id="total_qty" name="total_qty">
+  <input type="hidden" id="total_price" name="total_price">
+  <input type="hidden" id="total_tax" name="total_tax">
+  <input type="hidden" id="total_discount" name="total_discount">
+  <input type="hidden" id="total_amount" name="total_amount">
+  <input type="hidden" id="bill_items" name="bill_items">
+  <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">General</a></li>
+    <li ng-show="receipt.receipt_no"><a href="#tab2" data-toggle="tab">Receipt</a></li>
+  </ul>
+  <div id="tab-content" class="tab-content">
+    <div class="tab-pane active" id="tab1">
+      <table id="order-form">
+        <tr>
+          <td>
+            <label for="bill_no">Order No#</label>
+            <input type="text" class="form-control" id="bill_no" name="bill_no"
+              ng-model="bill.bill_no" readonly>
+          </td>
+          <td>
+            <label for="bill_date">Order Date <span class="required">*</span></label>
+            <div class="input-group date">
+              <input type="text" class="form-control" placeholder="dd/MM/yyyy" id="bill_date" name="bill_date" required>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+              </span>
+            </div>
+          </td>
+          <td>
+            <label for="status_id">Status <span class="required">*</span></label>
+            <select class="form-control" id="status_id" name="status_id" ng-model="status"
+              ng-options="c.name|capitalize for c in statuses track by c.id" required>
+              <option value="">- Please Select -</option>
+            </select>
+          </td>
+          <td>
+            <label for="enter_by">Enter By</label>
+            <input type="text" class="form-control" id="enter_by" name="enter_by"
+              ng-value="bill.users.firstname" readonly>
+          </td>
+          <td>
+            <label for="enter_date">Enter Date</label>
+            <input type="text" class="form-control" id="enter_date" name="enter_date"
+              ng-value="bill.bill_date|date:'dd/MM/yyyy'" readonly>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="customer">Customer</label>
+            <select id="customer"></select>
+            <a href="#" ng-click="removeCustomer()">remove</a>
+          </td>
+          <td>
+            <label for="table">Table</label>
+            <select id="table"></select>
+            <a href="#" ng-click="removeTable()">remove</a>
+          </td>
+          <td>
+            <label for="currency">Currency <span class="required">*</span></label>
+            <select class="form-control" id="currency" name="currency" ng-model="currency"
+              ng-options="c.code for c in currencies track by c.code" required>
+              <option value="">- Please Select -</option>
+            </select>
+          </td>
+          <td>
+            <label for="tax_rate">Tax %</label>
+            <input type="text" class="form-control form-number" id="tax_rate" name="tax_rate"
+              ng-value="bill.tax_rate|number:2" readonly>
+          </td>
+          <td>
+            <label for="discount_rate">Discount %</label>
+            <input type="text" class="form-control form-number" id="discount_rate" name="discount_rate"
+              ng-value="bill.discount_rate|number:2" readonly>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="tab-pane" id="tab2" ng-show="receipt.receipt_no">
+      <table id="order-form">
+        <tr>
+          <td>
+            <label for="receipt_no">Receipt No</label>
+            <input type="text" class="form-control" id="receipt_no" name="receipt_no"
+              ng-value="receipt.receipt_no" readonly>
+          </td>
+          <td>
+            <label for="method">Method</label>
+            <input type="text" class="form-control" id="method" name="method"
+              ng-value="receipt.method" readonly>
+          </td>
+          <td>
+            <label for="total_rcv_charge">Total Charge</label>
+            <input type="text" class="form-control" id="total_rcv_charge" name="total_rcv_charge"
+              ng-value="receipt.total_charge|number:2" readonly>
+          </td>
+          <td>
+            <label for="total_rcv_return">Total Return</label>
+            <input type="text" class="form-control" id="total_rcv_return" name="total_rcv_return"
+              ng-value="receipt.total_return|number:2" readonly>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="order-form order-form-inner">
+    <div class="order-box">
+      <table id="order-box-table">
+        <tr>
+          <td>
+            <label for="product">Product <span class="required">*</span></label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="product" name="product" placeholder="Search Product" readonly>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="openProduct()"><i class="fa fa-ellipsis-h"></i></button>
+                <button class="btn btn-default" type="button" ng-click="clearProduct()"><i class="fa fa-times"></i></button>
+              </span>
+            </div>
+          </td>
+          <td>
+            <label for="option">Options</label>
+            <input type="text" class="form-control" id="option" name="option" placeholder="Order Remark">
+          </td>
+          <td>
+            <label for="qty">Qty</label>
+            <input type="text" class="form-control form-number" id="qty" name="qty" placeholder="Quantity" value="1">
+          </td>
+          <td valign="bottom">
+            <a href="#" class="btn btn-default" ng-click="addItem()">Add</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <table class="table table-hover" id="order-table" ng-show="bill_items.length>0">
+      <thead>
+        <tr>
+          <th width="5%">No</th>
+          <th width="10%">Code</th>
+          <th width="30%">Product</th>
+          <th width="10%">Option</th>
+          <th width="15%" style="text-align: center">Price</th>
+          <th width="10%" style="text-align: center">Qty</th>
+          <th width="15%" style="text-align: right">Amount</th>
+          <th width="5%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="p in bill_items">
+          <td>@{$index + 1}</td>
+          <td>@{p.code}</td>
+          <td>@{p.name}</td>
+          <td>@{p.option}</td>
+          <td><input type="text" class="form-control" ng-model="p.price"></td>
+          <td><input type="text" class="form-control" ng-model="p.qty"></td>
+          <td align="right">@{p.amount|number:2}</td>
+          <td><a href="#" class="btn btn-danger" ng-click="deleteItem($index)"><i class="fa fa-trash-o"></i></a></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">Total</td>
+          <td align="right">@{sum.total_qty} Unit</td>
+          <td align="right">@{sum.total_amount|number:2}</td>
+          <td>@{bill.currency}</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div style="margin: 15px 5px" ng-hide="bill_items.length>0"><strong>No item found</strong></div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="remark">Note</label>
+      <textarea class="form-control" style="height: 60px" id="remark" name="remark" ng-model="bill.remark" placeholder="Enter a note here"></textarea>
+      <div class="form-link">
+        <a href="/admin/orders">Back to orders</a>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <table id="sum-table" align="right">
+        <tr>
+          <td>Sub-Total</td>
+          <td>@{sum.total_price|number:2}</td>
+          <td>@{bill.currency}</td>
+        </tr>
+        <tr>
+          <td>Tax (@{bill.tax_rate}%)</td>
+          <td>@{sum.total_tax|number:2}</td>
+          <td>@{bill.currency}</td>
+        </tr>
+        <tr>
+          <td>Discount</td>
+          <td>@{sum.total_discount|number:2}</td>
+          <td>@{bill.currency}</td>
+        </tr>
+        <tr>
+          <td>Grand Total</td>
+          <td>@{sum.total_amount|number:2}</td>
+          <td>@{bill.currency}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</form>
+</div>
+<script type="text/javascript" src="/static/app/pagination.js"></script>
+<script type="text/javascript" src="/static/app/sorted.js"></script>
+<script type="text/javascript" src="/static/app/orders/form.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $('#payslip').on('click', function() {
+      var id = $('#id').val();
+      var site_id = $('#site_id').val();
+      if(id && site_id) {
+        var w = 700;
+        var h = 450;
+        var l = Number((screen.width / 2) - (w / 2));
+        var t = Number((screen.height / 2) - (h / 2)) - 80;
+        var props = 'directories=0,location=0,menubar=0,resizable=0,scrollbars=0,status=0,width=' + w + ',height=' + h + ',top=' + t + ',left=' + l;
+        window.open('{{rpt_server}}frameset?__report=bill.rptdesign&__format=pdf&site_id=' + site_id + '&bill_id=' + id, 'Report Viewer', props);
+      }
+    });
+
+    $('#saleorder').on('click', function() {
+      var id = $('#id').val();
+      var site_id = $('#site_id').val();
+      if(id && site_id) {
+        var w = 850;
+        var h = 650;
+        var l = Number((screen.width / 2) - (w / 2));
+        var t = Number((screen.height / 2) - (h / 2)) - 80;
+        var props = 'directories=0,location=0,menubar=0,resizable=0,scrollbars=0,status=0,width=' + w + ',height=' + h + ',top=' + t + ',left=' + l;
+        window.open('{{rpt_server}}frameset?__report=receipt.rptdesign&__format=pdf&site_id=' + site_id + '&bill_id=' + id, 'Report Viewer', props);
+      }
+    });
+  });
+</script>
+{% endblock %}

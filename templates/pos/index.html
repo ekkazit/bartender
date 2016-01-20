@@ -1,0 +1,180 @@
+{% extends "master/pos.html" %}
+
+{% block content %}
+<div ng-app="app" ng-controller="ctrl" id="ctrl" ng-cloak>
+  <input type="hidden" id="cust_id">
+  {% include "pos/partial/modals.html" %}
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="col-md-7">
+        <div class="navbar-icon">
+          <a href="/home"><i class="fa fa-bars fa-2x"></i></a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+              aria-haspopup="true" aria-expanded="false">All Products <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#" ng-click="searchByCategory()">All Products</a></li>
+              <li ng-repeat="c in categories"><a href="#" ng-click="searchByCategory(c.id, c.name)">@{c.name}</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-5">
+        <div class="box-bordered">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" ng-click="openHoldBill()"><i class="fa fa-refresh"></i> @{holdBillCount}</a></li>
+          </ul>
+          <div class="navbar-caption">
+            <h4>@{bill.bill_no}</h4>
+            <p class="caption" ng-hide="bill.bill_date">(New Sale)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="col-md-7">
+      <div class="search-box">
+        <form method="post" ng-submit="searchProduct()">
+          <div class="search-addon">
+            <a href="#"><i class="fa fa-search"></i></a>
+          </div>
+          <input type="text" class="form-control" placeholder="Search Product" ng-model="terms">
+        </form>
+      </div>
+      <ul class="product">
+        <li ng-repeat="p in products">
+          <a href="#" ng-click="addBillItem(p.id, p.name, p.unit_price, 1)">
+            <div class="item">
+              <img ng-src="@{p.img_path}">
+              <div class="text">@{p.name}</div>
+              <div class="option">@{p.option}</div>
+              <div class="price">@{p.unit_price|number:2}</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+      <div class="paging">
+        <div paginate="results"></div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="box-bordered">
+        <div class="bill-wrapper">
+          <table class="table" id="bill-table">
+            <thead>
+              <tr>
+                <th width="36%"><i class="fa fa-shopping-cart"></i> @{sum.total_qty} items</th>
+                <th width="18%">Price</th>
+                <th width="18%">Qty</th>
+                <th width="18%" style="text-align: right">Total</th>
+                <th width="10%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="b in billItems">
+                <td>@{b.name}</td>
+                <td>@{b.price|number:2}</td>
+                <td><input type="text" class="form-control numpad" ng-model="b.qty" readonly></td>
+                <td align="right">@{b.amount|number:2}</td>
+                <td>
+                  <a href="#" ng-click="deleteBillItem($index)"><i class="fa fa-trash-o fa-2x"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="no-item" ng-show="!billItems.length">No items found</p>
+        </div>
+        <table id="bill-sum">
+          <tr>
+            <td>Sub-Total</td>
+            <td>@{sum.total_price|number:2}</td>
+            <td>THB</td>
+          </tr>
+          <tr>
+            <td>Tax <span ng-show="bill.tax_rate">(@{bill.tax_rate}%)</span></td>
+            <td>@{sum.total_tax|number:2}</td>
+            <td>THB</td>
+          </tr>
+          <tr>
+            <td>Discount <span ng-show="bill.discount_rate">(@{bill.discount_rate}%)</span></td>
+            <td>@{sum.total_discount|number:2}</td>
+            <td>THB</td>
+          </tr>
+        </table>
+        <div class="bill-box">
+          <div class="pull-right">
+            <a href="#" class="btn btn-default" ng-click="openCustomer()"><i class="fa fa-user-plus"></i></a>
+          </div>
+          <form class="form-inline">
+            <select style="width: 200px" id="customer" data-placeholder="Select customers"></select>
+            <a href="#" id="clearcust"><i class="fa fa-times-circle"></i></a>
+          </form>
+        </div>
+        <ul class="toolbar">
+          <li><a href="#" class="btn btn-default" ng-click="voidBill()"><i class="fa fa-times"></i><br>Void</a></li>
+          <li><a href="#" class="btn btn-default" ng-click="saveBill()"><i class="fa fa-save"></i><br>Save</a></li>
+          <li><a href="#" class="btn btn-default"><i class="fa fa-tag"></i><br>Discount</a></li>
+          <li><a href="#" class="btn btn-default" ng-click="viewBillPdf()"><i class="fa fa-print"></i><br>Print</a></li>
+        </ul>
+        <div class="bill-button">
+          <a href="#" class="btn btn-success btn-lg" data-toggle="modal" ng-click="openCheckout()" ng-disabled="!sum.total_amount">
+            <p class="caption">Checkout</p>
+            <p class="price">$@{sum.total_amount|number:2}</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pop-title" style="display:none">
+    <table width="250px" id="pop-title">
+      <tr>
+        <td><strong>Quantity</strong></td>
+        <td align="right">
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="npDecrement()"><i class="fa fa-minus"></i></button>
+            </span>
+            <input type="text" class="form-control" value="1" id="np-qty" onclick="npUnlock()">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="npIncrement()"><i class="fa fa-plus"></i></button>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="pop-content" style="display:none">
+    <table width="250px" id="pop-content">
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('1')">1</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('2')">2</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('3')">3</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npDel()">del</a></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('4')">4</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('5')">5</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('6')">6</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npPlusMinus()">+/-</a></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('7')">7</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('8')">8</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('9')">9</a></td>
+        <td rowspan="2"><a href="#" class="btn btn-default btn-return" onclick="npReturn()">Enter</a></td>
+      </tr>
+      <tr>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('0')">0</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('00')">00</a></td>
+        <td><a href="#" class="btn btn-default" onclick="npNumber('.')">.</a></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<script type="text/javascript" src="/static/app/pos/pager.js"></script>
+<script type="text/javascript" src="/static/app/pos/pos.js"></script>
+<script type="text/javascript" src="/static/app/pos/numpad.js"></script>
+{% endblock %}

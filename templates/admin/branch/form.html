@@ -1,0 +1,88 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="#" class="btn btn-default" ng-click="view('{{id}}')">Cancel</a>
+  <a href="#" class="btn btn-success" ng-click="submit()"><i class="fa fa-save"></i> Save Change</a>
+</div>
+<h3>{% if id %}Edit Branch <span class="text">"@{ ::branch.name}"</span>{% else %}New Branch{% endif %}</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-12">
+    <form id="forms" class="form-wrapper" enctype="multipart/form-data" action="/api/branch/save" method="post" data-parsley-validate>
+      <input type="hidden" id="id" name="id" value="{{id}}">
+      <input type="hidden" id="no" name="no" ng-model="branch.no">
+      <table id="form-table">
+        <tr>
+          <td>
+            <label for="code">Code</label>
+          </td>
+          <td>
+            <input type="text" class="form-control form-code" id="code" name="code"
+              ng-model="branch.code" readonly>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="name" name="name"
+              ng-model="branch.name" required>
+            <div class="small">Branch name for example: Chonburi</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="address">Address</label>
+          </td>
+          <td>
+            <textarea class="form-control" rows="3" id="address" name="address"
+              ng-model="branch.address"></textarea>
+            <div class="small">Contact address length within 300 chars</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="email">Email</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="email" name="email" ng-model="branch.email">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="phone">Phone</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="phone" name="phone" ng-model="branch.phone">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="contact">Contact Person</label>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="contact" name="contact" ng-model="branch.contact">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="is_main">Main branch</label>
+          </td>
+          <td>
+            <input type="checkbox" id="is_main" name="is_main"/>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div class="form-link">
+      <a href="/admin/branch">Back to branches</a>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/static/app/branch/form.js"></script>
+{% endblock %}

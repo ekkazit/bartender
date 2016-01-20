@@ -1,0 +1,138 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="#" class="btn btn-default" ng-click="view('{{id}}')">Cancel</a>
+  <a href="#" class="btn btn-success" ng-click="submit()"><i class="fa fa-save"></i> Save Change</a>
+</div>
+<h3>{% if id %}Edit Product <span class="text">"@{ ::product.name}"</span>{% else %}New Product{% endif %}</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-9">
+    <form id="forms" class="form-wrapper" enctype="multipart/form-data" action="/api/product/save" method="post" data-parsley-validate>
+      <input type="hidden" id="id" name="id" value="{{id}}">
+      <input type="hidden" id="img" name="img">
+      <input type="hidden" id="img_path" name="img_path">
+      <input type="hidden" id="no" name="no" ng-model="product.no">
+      <table id="form-table">
+        <tr>
+          <td>
+            <label for="code">Code</label>
+          </td>
+          <td>
+            <input type="text" class="form-control form-code" id="code" name="code"
+              ng-model="product.code" readonly>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="name" name="name"
+              ng-model="product.name" required>
+            <div class="small">Short name. Example: Cappucino Hot</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="description_lc">Description1</label>
+          </td>
+          <td>
+            <textarea class="form-control" rows="3" id="description_lc" name="description_lc"
+              ng-model="product.description_lc"></textarea>
+            <div class="small">Localized description in 300 chars</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="description_fg">Description2</label>
+          </td>
+          <td>
+            <div class="form-inline">
+              <select class="form-control" style="float: left; margin: 0 10px 15px 0">
+                <option value="">- Select Language -</option>
+                <option value="EN">English</option>
+                <option value="JP">Japanese</option>
+                <option value="CH">Chinese</option>
+                <option value="KR">Korean</option>
+              </select>
+              <a href="#" class="btn btn-default">Translate</a>
+            </div>
+            <textarea class="form-control" rows="3" id="description_fg" name="description_fg"
+              ng-model="product.description_fg"></textarea>
+            <div class="small">Foreign description in 500 chars</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="cate_id">Category</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <select class="form-control" id="cate_id" name="cate_id" ng-model="category"
+              ng-options="c.name for c in categories track by c.id" required>
+              <option value="">- Please Select -</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="unit_price">Unit Price</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control form-number" id="unit_price" name="unit_price"
+              ng-model="product.unit_price" data-parsley-type="number" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="cost_price">Cost Price</label>
+          </td>
+          <td>
+            <input type="text" class="form-control form-number" id="cost_price" name="cost_price"
+              ng-model="product.cost_price" data-parsley-type="number">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="is_hot">Hot</label>
+          </td>
+          <td>
+            <input type="checkbox" id="is_hot" name="is_hot"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="is_visible">Visible</label>
+          </td>
+          <td>
+            <input type="checkbox" id="is_visible" name="is_visible"/>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div class="form-link">
+      <a href="/admin/product">Back to products</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <form id="uploadform" enctype="multipart/form-data" action="/api/fileupload/save" method="post">
+      <div class="img-holder">
+        <div id="no-pic" class="no-file" style="display:none">No Photo</div>
+        <img id="pic">
+        <div class="line">
+          <a href="#" id="addimg" class="btn btn-default pull-right">Add Image</a>
+          <a href="#" id="removeimg">Remove</a>
+        </div>
+        <input type="file" id="file" name="file" style="display:none">
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="/static/app/product/form.js"></script>
+{% endblock %}

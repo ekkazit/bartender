@@ -1,0 +1,41 @@
+{% extends "master/admin.html" %}
+
+{% block head %}
+<div class="pull-right">
+  <a href="#" class="btn btn-default" ng-click="view('{{id}}')">Cancel</a>
+  <a href="#" class="btn btn-success" ng-click="submit()"><i class="fa fa-save"></i> Save Change</a>
+</div>
+<h3>{% if id %}Edit Category <span class="text">"@{ ::category.name}"</span>{% else %}New Category{% endif %}</h3>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-12">
+    <form id="forms" class="form-wrapper" enctype="multipart/form-data" action="/api/category/save" method="post" data-parsley-validate>
+      <input type="hidden" id="id" name="id" value="{{ id }}">
+      <table id="form-table">
+        <tr>
+          <td>
+            <label for="name">Name</label>
+            <span class="required">*</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="name" name="name" ng-model="category.name" required>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="description">Description</label></td>
+          <td>
+            <textarea id="description" name="description" ng-model="category.description" class="form-control"></textarea>
+            <p class="small">Category description in 200 chars</p>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div class="form-link">
+      <a href="/admin/category">Back to categories</a>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/static/app/category/form.js"></script>
+{% endblock %}

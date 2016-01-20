@@ -1,0 +1,17 @@
+{% extends "master/login.html" %}
+
+{% block content %}
+<div class="login-form">
+  <h3>Sign Up</h3>
+  <p class="login-title">Create your free account</p>
+  <form id="form" method="post" onsubmit="return false">
+    <input type="text" class="form-control input-lg" placeholder="Your Email">
+    <input type="text" class="form-control input-lg" placeholder="New Password">
+    <button type="submit" class="btn btn-success btn-lg">Create Account</button>
+  </form>
+  <div class="login-alt">or register using <a href="#">Facebook</a></div>
+</div>
+<div class="login-bottom">
+  <span class="pull-right">Already signed up? <a href="/login">Log in</a></span>
+</div>
+{% endblock %}

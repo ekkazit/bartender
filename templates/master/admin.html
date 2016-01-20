@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}PosPax - Admin{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/font.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/admin.css">
+  <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/angular/angular.min.js"></script>
+  <script type="text/javascript" src="/static/vendor/jquery-form/jquery.form.min.js"></script>
+  <script type="text/javascript" src="/static/vendor/parsley/parsley.min.js"></script>
+  {% block script %}{% endblock %}
+</head>
+<body ng-app="app" ng-controller="ctrl" id="ctrl" ng-cloak>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="/home" class="navbar-brand">PosPax</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ekkasit <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Change Password</a></li>
+            <li><a href="#">View Profile</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li><a href="/admin/category">Categories</a></li>
+        <li><a href="/admin/product">Product</a></li>
+        <li><a href="/admin/table">Tables</a></li>
+        <li><a href="/admin/customer">Customer</a></li>
+        <li><a href="/admin/user">Users</a></li>
+        <li><a href="/admin/branch">Branch</a></li>
+        <li><a href="/admin/orders">Orders</a></li>
+        <li class="report">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/report/dashboard">Dashboard</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/report/sale">Sale monthly</a></li>
+            <li><a href="/report/compare">Sale compare</a></li>
+            <li><a href="/report/product">Sale by Product</a></li>
+            <li><a href="/report/customer">Sale by Customer</a></li>
+            <li><a href="/report/bestseller">Best sellers</a></li>
+            <li><a href="/report/staff">Staff Performance</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/report/orders">Sale orders</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </div>
+    <div class="title-box">
+      <div class="container">
+      {% block head %}{% endblock %}
+      </div>
+    </div>
+  </nav>
+  {% block content %}{% endblock %}
+  <script type="text/javascript" src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    function setNavigation() {
+      var path = window.location.pathname;
+      path = path.replace(/\/$/, '');
+      path = decodeURIComponent(path);
+      $('.nav a').each(function () {
+        var href = $(this).attr('href');
+        if (path.substring(0, href.length) === href) {
+          $(this).closest('li').addClass('active');
+          $(this).closest('.report').addClass('active');
+        }
+      });
+    }
+    $(function() { setNavigation(); });
+  </script>
+</body>
+</html>
